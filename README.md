@@ -7,8 +7,7 @@ This repository contains code for a face recognition system using YoloV8 for fac
 - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Description
 
