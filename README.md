@@ -6,7 +6,7 @@ This repository contains code for a face recognition system using YoloV8 for fac
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Project Structure](#project-structure)
+
 
 
 ## Description
@@ -43,15 +43,9 @@ This project integrates YoloV8, a state-of-the-art object detection model, with 
     ```bash
     python face_recognition.py
     ```
+## Note    
+Dont forget to add your paths to directory
 
-## Project Structure
-.
-├── detection
-│ └── yolo_model # Directory containing YOLOv8 model files
-├── .DS_Store
-├── face_recognition.py # Main script for face recognition
-├── generate_face_embeddings.py # Script to generate face embeddings
-├── requirements.txt # Python dependencies
-└── README.md # Project README file
+
 
 
