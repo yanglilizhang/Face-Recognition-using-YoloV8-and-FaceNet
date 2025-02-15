@@ -1,11 +1,5 @@
 # Face Recognition using YoloV8 and FaceNet
 
-https://github.com/timesler/facenet-pytorch/blob/master/README_cn.md
-
-https://github.com/VedikaH/Face-recognition-using-YoloV8-and-Facenet
-https://github.com/thrishalaa/Face-recognition-using-YoloV8-and-Facenet ########
-https://github.com/todap/Face-Recognition-using-YoloV8-and-FaceNet
-https://github.com/erfan-mtzv/Face-Detection-and-Recognition-with-YOLOv8-and-FaceNet-PyTorch
 This repository contains code for a face recognition system using YoloV8 for face detection and FaceNet for face recognition. YoloV8 efficiently detects faces in images, while FaceNet accurately matches and recognizes the detected faces by generating unique embeddings.
 
 ## 生成requirements.txt
@@ -56,6 +50,13 @@ This project integrates YoloV8, a state-of-the-art object detection model, with 
     ```
 ## Note    
 Dont forget to add your paths to directory
+
+https://github.com/timesler/facenet-pytorch/blob/master/README_cn.md
+
+https://github.com/thrishalaa/Face-recognition-using-YoloV8-and-Facenet
+https://github.com/VedikaH/Face-recognition-using-YoloV8-and-Facenet
+https://github.com/todap/Face-Recognition-using-YoloV8-and-FaceNet
+https://github.com/erfan-mtzv/Face-Detection-and-Recognition-with-YOLOv8-and-FaceNet-PyTorch
 
 
 
