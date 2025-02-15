@@ -41,12 +41,12 @@ This project integrates YoloV8, a state-of-the-art object detection model, with 
 
 1. **Generate Face Embeddings:**
     ```bash
-    python generate_face_embeddings.py
+    python generate_face_embeddings.py 生成known_embeddings.pkl文件
     ```
 
 2. **Run Face Recognition:**
     ```bash
-    python face_recognition.py
+    python face_recognition.py 识别检测
     ```
 ## Note    
 Dont forget to add your paths to directory
