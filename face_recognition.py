@@ -35,13 +35,23 @@ known_embeddings = load_known_embeddings()
 
 # Function to compare embeddings
 def compare_embeddings(embedding, known_embeddings):
-    threshold = 0.2
-    min_dist = float('inf')
+    threshold = 0.8
+    min_dist = float('inf') #初始化最小距离 min_dist 为无穷大
     match = "Unknown"
 
+    if not known_embeddings:
+        print("Warning: known_embeddings is empty!")
+        return "Unknown"
+    #遍历已知嵌入向量集，计算欧氏距离：
+    embedding = np.array(embedding)
     for name, known_embedding in known_embeddings.items():
-        dist = np.linalg.norm(np.array(embedding) - np.array(known_embedding))
+        #欧氏距离衡量相似度：欧氏距离用于衡量两个向量之间的差异。距离越小，表示两个向量越相似
+        # dist = np.linalg.norm(np.array(embedding) - np.array(known_embedding))
+        known_embedding = np.array(known_embedding)
+        dist = np.linalg.norm(embedding - known_embedding)
+        print(f"Distance between {name} and current face: {dist}")
         if dist < min_dist:
+            # 如果当前距离小于 min_dist，更新 min_dist 和 match。
             min_dist = dist
             match = name if dist < threshold else "Unknown"
 
@@ -78,7 +88,10 @@ while True:
         face_rgb = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
         boxes, probs = mtcnn.detect(face_rgb)
         if boxes is not None:
-            face_tensor = mtcnn(face_rgb).squeeze().unsqueeze(0)
+            # face_tensor = mtcnn(face_rgb).squeeze().unsqueeze(0)
+            face_tensor = mtcnn(face_rgb)
+            if face_tensor.ndim == 3:  # 单张图像
+                face_tensor = face_tensor.squeeze().unsqueeze(0)
             face_embedding = resnet(face_tensor).detach().cpu().numpy().flatten()
             embeddings.append(face_embedding)
             print("Embedding extracted:", face_embedding)
@@ -88,12 +101,11 @@ while True:
     for embedding in embeddings:
         match = compare_embeddings(embedding, known_embeddings)
         print("Face recognized as:", match)
-        for box in boxes:
-            if boxes is not None:
+        if boxes is not None:
+            for box in boxes:
                 x1, y1, x2, y2 = map(int, box)
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.putText(frame, match, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
-
 
     cv2.imshow('Camera Feed', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):

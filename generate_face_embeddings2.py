@@ -23,7 +23,6 @@ except FileNotFoundError:
     known_embeddings = {}
     print("No known embeddings found. Starting with an empty dictionary.")
 
-
 # Function to save embeddings for images in a directory structure
 def save_embeddings_from_directory(directory_path):
     if not os.path.isdir(directory_path):
@@ -48,29 +47,49 @@ def save_embeddings_from_directory(directory_path):
                     boxes = results[0].boxes.cpu().numpy()
                     print(f"yolov8 results: {results}")
 
+                    for result in results:
+                        boxes = result.boxes  # Boxes object for bounding box outputs
+                        masks = result.masks  # Masks object for segmentation masks outputs
+                        keypoints = result.keypoints  # Keypoints object for pose outputs
+                        probs = result.probs  # Probs object for classification outputs
+                        obb = result.obb  # Oriented boxes object for OBB outputs
+                        # result.show()  # display to screen
+                        # result.save(filename="result.jpg")  # save to disk
+
                     faces = []
                     for box in boxes:
-                        # x1, y1, x2, y2 = [int(val) for val in box]
+                        print(f"Box coordinates box: {box}")
+                        coords2 = box.xywh[0]  # 获取边界框的坐标
+                        print(f"Box coordinates xywh: {coords2}")
                         coords = box.xyxy[0]  # 获取边界框的坐标
+                        print(f"Box coordinates xyxy: {coords}")  # tensor([2348.0920,   47.1038, 3773.6794, 2118.1113])
                         x1, y1, x2, y2 = [int(coord) for coord in coords]
                         print(f"Box coordinates: {x1}, {y1}, {x2}, {y2}")
+                        # x1, y1, x2, y2 = [int(val) for val in box]
                         face = img[y1:y2, x1:x2]
                         faces.append(face)
 
                     embeddings = []
                     for face in faces:
-                        print(f"Processing face in '{face.shape}'...")  # (2071, 1425, 3)
+                        print(f"Processing face in '{face.shape}'...")
+                        # face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
                         # image_resized = cv2.resize(face, (160, 160))
                         # print(f"Input tensor shape: {image_resized.shape}")
                         # input_tensor = torch.tensor(image_resized).permute(2, 0, 1).unsqueeze(0).float()
-                        # face_rgb = cv2.cvtColor(image_resized, cv2.COLOR_BGR2RGB)
-
+                        # input_tensor = torch.tensor(image_resized).permute(2, 0, 1).unsqueeze(0).type(torch.float32)
+                        # input_tensor = torch.tensor(image_resized).permute(2, 0, 1).unsqueeze(0)
+                        # # input_tensor = image_resized.squeeze(0)  # 去掉第一个维度，形状变成 [1, 3, 160, 160]
+                        # print(f"Input tensor shape: {input_tensor.shape}")
+                        # 方法 1：检查张量的元素数是否为 0
+                        # if input_tensor.numel() == 0:
+                        #     print("Method 1: The tensor is empty.")
+                        # else:
+                        #     print("Method 1: The tensor is not empty.")
                         try:
                             boxes, probs = mtcnn.detect(face)
                         except Exception as e:
                             print(f"Error: {e}")
-                        # Expected 3D (unbatched) or 4D (batched) input to conv2d, but got input of size: [1, 1, 3, 160, 160]
-                        # RuntimeError: torch.cat(): expected a non-empty list of Tensors
+
                         if boxes is not None:
                             # 使用 MTCNN 获取人脸张量
                             face_tensor = mtcnn(face)
@@ -83,6 +102,7 @@ def save_embeddings_from_directory(directory_path):
                     person_embeddings.extend(embeddings)
                     print(f"Embeddings saved for '{filename}'.")
 
+
             known_embeddings[name] = person_embeddings
             print(f"Embeddings saved for '{name}'.")
 
@@ -90,7 +110,6 @@ def save_embeddings_from_directory(directory_path):
     with open('known_embeddings.pkl', 'wb') as f:
         pickle.dump(known_embeddings, f)
         print("Known embeddings saved successfully.")
-
 
 # Save embeddings for images in a directory structure
 # Directory structure should be:
@@ -105,5 +124,5 @@ def save_embeddings_from_directory(directory_path):
 # │   └── ...
 # └── ...
 # directory_path = "/path/to/directory" #Enter your directory path here
-directory_path = "known_faces"  # Enter your directory path here
+directory_path = "known_faces" #Enter your directory path here
 save_embeddings_from_directory(directory_path)
