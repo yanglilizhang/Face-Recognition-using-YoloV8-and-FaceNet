@@ -7,7 +7,7 @@ import numpy as np
 
 # Load YOLOv8 model
 try:
-    model = YOLO("detection/weights/best.pt")  
+    model = YOLO("detection/weights/best.pt")
     print("YOLOv8 model loaded successfully.")
 except Exception as e:
     print(f"Error loading YOLOv8 model: {e}")
@@ -20,6 +20,7 @@ try:
 except Exception as e:
     print(f"Error loading MTCNN/InceptionResnetV1: {e}")
 
+
 # Load known embeddings
 def load_known_embeddings():
     try:
@@ -31,21 +32,23 @@ def load_known_embeddings():
         print(f"Error loading known embeddings: {e}")
     return known_embeddings
 
+
 known_embeddings = load_known_embeddings()
+
 
 # Function to compare embeddings
 def compare_embeddings(embedding, known_embeddings):
     threshold = 0.8
-    min_dist = float('inf') #初始化最小距离 min_dist 为无穷大
+    min_dist = float('inf')  # 初始化最小距离 min_dist 为无穷大
     match = "Unknown"
 
     if not known_embeddings:
         print("Warning: known_embeddings is empty!")
         return "Unknown"
-    #遍历已知嵌入向量集，计算欧氏距离：
+    # 遍历已知嵌入向量集，计算欧氏距离：
     embedding = np.array(embedding)
     for name, known_embedding in known_embeddings.items():
-        #欧氏距离衡量相似度：欧氏距离用于衡量两个向量之间的差异。距离越小，表示两个向量越相似
+        # 欧氏距离衡量相似度：欧氏距离用于衡量两个向量之间的差异。距离越小，表示两个向量越相似
         # dist = np.linalg.norm(np.array(embedding) - np.array(known_embedding))
         known_embedding = np.array(known_embedding)
         dist = np.linalg.norm(embedding - known_embedding)
@@ -57,6 +60,7 @@ def compare_embeddings(embedding, known_embeddings):
 
     print(f"Min distance: {min_dist}, Match: {match}")
     return match
+
 
 # Open webcam
 cap = cv2.VideoCapture(0)
@@ -97,7 +101,7 @@ while True:
             print("Embedding extracted:", face_embedding)
         else:
             print("No faces detected by MTCNN in the cropped image.")
-    
+
     for embedding in embeddings:
         match = compare_embeddings(embedding, known_embeddings)
         print("Face recognized as:", match)
